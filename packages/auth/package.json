@@ -1,0 +1,24 @@
+{
+  "name": "@isp-app/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@isp-app/db": "workspace:*",
+    "@isp-app/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@isp-app/config": "workspace:*",
+    "typescript": "^5"
+  }
+}
