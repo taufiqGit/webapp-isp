@@ -32,6 +32,8 @@ app.use(
   }),
 );
 
+app.get("/apiku", (c) => c.json({ message: "Hello" }));
+
 app.get("/", (c) => {
   return c.text("OK");
 });
