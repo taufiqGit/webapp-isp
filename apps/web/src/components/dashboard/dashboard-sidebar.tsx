@@ -1,5 +1,5 @@
 import { cn } from "@isp-app/ui/lib/utils";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useTheme } from "next-themes";
 import {
   Activity,
@@ -19,18 +19,19 @@ import { authClient } from "@/lib/auth-client";
 
 interface NavItem {
   label: string;
-  to: "/dashboard";
+  to: "/" | "/customers/customer";
   icon: typeof LayoutDashboard;
   badge?: string;
+  activeMatch?: "exact" | "prefix" | "none";
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "Customers", to: "/dashboard", icon: Users },
-  { label: "Network Status", to: "/dashboard", icon: Network },
-  { label: "Billing & Invoices", to: "/dashboard", icon: CircleDollarSign },
-  { label: "Support Tickets", to: "/dashboard", icon: Ticket, badge: "12" },
-  { label: "Service Packages", to: "/dashboard", icon: Package },
+  { label: "Dashboard", to: "/", icon: LayoutDashboard, activeMatch: "exact" },
+  { label: "Customers", to: "/customers/customer", icon: Users, activeMatch: "prefix" },
+  { label: "Network Status", to: "/", icon: Network, activeMatch: "none" },
+  { label: "Billing & Invoices", to: "/", icon: CircleDollarSign, activeMatch: "none" },
+  { label: "Support Tickets", to: "/", icon: Ticket, badge: "12", activeMatch: "none" },
+  { label: "Service Packages", to: "/", icon: Package, activeMatch: "none" },
 ];
 
 export default function DashboardSidebar() {
@@ -38,6 +39,7 @@ export default function DashboardSidebar() {
   const { resolvedTheme, setTheme } = useTheme();
   const currentTheme = resolvedTheme ?? "dark";
   const isDark = currentTheme === "dark";
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   return (
     <div className="flex h-full flex-col justify-between px-2 py-3">
@@ -58,7 +60,15 @@ export default function DashboardSidebar() {
         <nav className="space-y-1.5">
           {navItems.map((item, index) => {
             const Icon = item.icon;
-            const isActive = index === 0;
+            const activeMatch = item.activeMatch ?? "none";
+            const isActive =
+              activeMatch === "exact"
+                ? pathname === item.to
+                : activeMatch === "prefix"
+                  ? item.to.startsWith("/customers")
+                    ? pathname.startsWith("/customers")
+                    : pathname.startsWith(item.to)
+                  : false;
             return (
               <Link key={item.label} to={item.to} className="block">
                 <div

@@ -1,4 +1,5 @@
 import type { AppRouter } from "@isp-app/api/routers/index";
+import { Button } from "@isp-app/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@isp-app/ui/components/card";
 import { Skeleton } from "@isp-app/ui/components/skeleton";
 import { cn } from "@isp-app/ui/lib/utils";
@@ -41,7 +42,30 @@ export default function DashboardPage({ userName, summary, isLoading, errorMessa
   const { kpis, infrastructure, recentCustomers, recentTickets, trafficOverview } = viewModel;
 
   return (
-    <DashboardShell sidebar={<DashboardSidebar />} topbar={<DashboardTopbar userName={userName} />}>
+    <DashboardShell
+      sidebar={<DashboardSidebar />}
+      topbar={
+        <DashboardTopbar
+          userName={userName}
+          actions={
+            <>
+              <Button variant="secondary" size="sm" className="rounded-lg">
+                General View
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                Financials
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                Infrastructure
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-lg border-border bg-background">
+                Last 30 Days
+              </Button>
+            </>
+          }
+        />
+      }
+    >
       <div className="grid h-full min-h-0 gap-3 grid-rows-[auto_minmax(0,1fr)_minmax(0,1fr)]">
         {errorMessage ? (
           <Card className="bg-destructive/10 py-3">

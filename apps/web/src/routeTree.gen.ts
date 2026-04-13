@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CustomersSubscriptionRouteImport } from './routes/customers.subscription'
+import { Route as CustomersCustomerRouteImport } from './routes/customers.customer'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -23,38 +26,82 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CustomersRoute = CustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CustomersSubscriptionRoute = CustomersSubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => CustomersRoute,
+} as any)
+const CustomersCustomerRoute = CustomersCustomerRouteImport.update({
+  id: '/customer',
+  path: '/customer',
+  getParentRoute: () => CustomersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/customers/customer': typeof CustomersCustomerRoute
+  '/customers/subscription': typeof CustomersSubscriptionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/customers/customer': typeof CustomersCustomerRoute
+  '/customers/subscription': typeof CustomersSubscriptionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/customers/customer': typeof CustomersCustomerRoute
+  '/customers/subscription': typeof CustomersSubscriptionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login'
+  fullPaths:
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/login'
+    | '/customers/customer'
+    | '/customers/subscription'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login'
-  id: '__root__' | '/' | '/dashboard' | '/login'
+  to:
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/login'
+    | '/customers/customer'
+    | '/customers/subscription'
+  id:
+    | '__root__'
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/login'
+    | '/customers/customer'
+    | '/customers/subscription'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CustomersRoute: typeof CustomersRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
 }
@@ -75,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/customers': {
+      id: '/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,11 +136,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/customers/subscription': {
+      id: '/customers/subscription'
+      path: '/subscription'
+      fullPath: '/customers/subscription'
+      preLoaderRoute: typeof CustomersSubscriptionRouteImport
+      parentRoute: typeof CustomersRoute
+    }
+    '/customers/customer': {
+      id: '/customers/customer'
+      path: '/customer'
+      fullPath: '/customers/customer'
+      preLoaderRoute: typeof CustomersCustomerRouteImport
+      parentRoute: typeof CustomersRoute
+    }
   }
 }
 
+interface CustomersRouteChildren {
+  CustomersCustomerRoute: typeof CustomersCustomerRoute
+  CustomersSubscriptionRoute: typeof CustomersSubscriptionRoute
+}
+
+const CustomersRouteChildren: CustomersRouteChildren = {
+  CustomersCustomerRoute: CustomersCustomerRoute,
+  CustomersSubscriptionRoute: CustomersSubscriptionRoute,
+}
+
+const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
+  CustomersRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CustomersRoute: CustomersRouteWithChildren,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
 }
