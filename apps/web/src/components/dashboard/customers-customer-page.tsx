@@ -172,6 +172,8 @@ export default function CustomersCustomerPage() {
                   <th className="py-2 font-medium">Status</th>
                   <th className="py-2 font-medium">Email</th>
                   <th className="py-2 font-medium">Phone</th>
+                  <th className="py-2 font-medium">Active Subs</th>
+                  <th className="py-2 font-medium">Next Payment</th>
                 </tr>
               </thead>
               <tbody>
@@ -197,6 +199,12 @@ export default function CustomersCustomerPage() {
                         <td className="py-3">
                           <Skeleton className="h-3 w-28" />
                         </td>
+                        <td className="py-3">
+                          <Skeleton className="h-3 w-12" />
+                        </td>
+                        <td className="py-3">
+                          <Skeleton className="h-3 w-24" />
+                        </td>
                       </tr>
                     ))
                   : rows.map((row) => (
@@ -217,11 +225,13 @@ export default function CustomersCustomerPage() {
                         <td className="py-3">{row.status}</td>
                         <td className="py-3">{row.email ?? "-"}</td>
                         <td className="py-3">{row.phone ?? "-"}</td>
+                        <td className="py-3">{row.totalActiveSubscriptions ?? 0}</td>
+                        <td className="py-3">{row.nextPaymentDate ? new Date(row.nextPaymentDate).toLocaleDateString('id-ID') : "-"}</td>
                       </tr>
                     ))}
                 {!listQuery.isLoading && rows.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
+                    <td colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
                       Belum ada customer. Klik Add Customer untuk membuat customer pertama.
                     </td>
                   </tr>
@@ -405,6 +415,17 @@ export default function CustomersCustomerPage() {
               <div className="space-y-1">
                 <Label>Status</Label>
                 <Input value={customerDetailQuery.data.status} readOnly />
+              </div>
+              <div className="space-y-1">
+                <Label>Total Active Subscriptions</Label>
+                <Input value={customerDetailQuery.data.totalActiveSubscriptions ?? 0} readOnly />
+              </div>
+              <div className="space-y-1">
+                <Label>Next Payment Date</Label>
+                <Input 
+                  value={customerDetailQuery.data.nextPaymentDate ? new Date(customerDetailQuery.data.nextPaymentDate).toLocaleDateString('id-ID') : '-'} 
+                  readOnly 
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="edit-customer-email">Email</Label>

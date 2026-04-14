@@ -40,13 +40,22 @@ async function recomputeCustomerStatus(customerId: string) {
   }
 
   const subscriptions = await db
-    .select({ status: customerSubscription.status })
+    .select({ status: customerSubscription.status, endDate: customerSubscription.endDate })
     .from(customerSubscription)
     .where(eq(customerSubscription.customerId, customerId));
 
   const hasActive = subscriptions.some((sub) => sub.status === "active");
   const hasSuspended = subscriptions.some((sub) => sub.status === "suspended");
   const hasAny = subscriptions.length > 0;
+  const activeCount = subscriptions.filter((sub) => sub.status === "active").length;
+
+  // Calculate next payment date (earliest end date among active subscriptions)
+  const activeEndDates = subscriptions
+    .filter((sub) => sub.status === "active" && sub.endDate)
+    .map((sub) => sub.endDate!)
+    .sort((a, b) => a.getTime() - b.getTime());
+  
+  const nextPaymentDate = activeEndDates.length > 0 ? activeEndDates[0] : null;
 
   let nextStatus: "prospect" | "active" | "suspended" | "terminated" = customerRow.status;
 
@@ -62,16 +71,25 @@ async function recomputeCustomerStatus(customerId: string) {
     nextStatus = "suspended";
   }
 
-  if (nextStatus !== customerRow.status) {
-    const [updated] = await db
-      .update(customer)
-      .set({ status: nextStatus, updatedAt: new Date() })
-      .where(eq(customer.id, customerId))
-      .returning();
-    return updated!;
+  const updates: any = {
+    status: nextStatus,
+    totalActiveSubscriptions: activeCount,
+    updatedAt: new Date(),
+  };
+
+  if (nextPaymentDate) {
+    updates.nextPaymentDate = nextPaymentDate;
+  } else {
+    updates.nextPaymentDate = null;
   }
 
-  return customerRow;
+  const [updated] = await db
+    .update(customer)
+    .set(updates)
+    .where(eq(customer.id, customerId))
+    .returning();
+  
+  return updated!;
 }
 
 export const subscriptionRouter = router({
@@ -88,6 +106,11 @@ export const subscriptionRouter = router({
   create: protectedProcedure.input(createInputSchema).mutation(async ({ input }) => {
     const id = crypto.randomUUID();
     const startDate = input.startDate ? new Date(input.startDate) : new Date();
+    
+    // Set end date to 10th of next month from start date
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    endDate.setDate(10);
 
     const inserted = await db
       .insert(customerSubscription)
@@ -98,6 +121,7 @@ export const subscriptionRouter = router({
         packageName: input.packageName,
         status: "active",
         startDate,
+        endDate,
         priceMonthly: input.priceMonthly,
       })
       .returning();

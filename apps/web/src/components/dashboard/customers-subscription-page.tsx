@@ -158,7 +158,7 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
           </div>
 
           <div className="mt-3 min-h-0 overflow-auto">
-            <table className="w-full min-w-[560px] text-left text-xs">
+            <table className="w-full min-w-[400px] text-left text-xs">
               <thead className="text-muted-foreground">
                 <tr className="border-b">
                   <th className="py-2 font-medium">Customer</th>
@@ -194,7 +194,7 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
                           )}
                         >
                           <td
-                            className="cursor-pointer py-3"
+                            className="cursor-pointer py-3 w-60"
                             onClick={() => {
                               setSelectedCustomerId(row.id);
                             }}
@@ -491,6 +491,22 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
                       Semua subscription non-aktif akan membuat customer menjadi suspended otomatis.
                     </p>
                   ) : null}
+                  <div className="mt-4 rounded-lg border border-border bg-muted/30 p-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Total Active Subscriptions</p>
+                        <p className="text-lg font-semibold text-emerald-500">{activeSubscriptions.length}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Next Payment Date</p>
+                        <p className="text-lg font-semibold">
+                          {activeSubscriptions.length > 0 
+                            ? new Date(new Date().setDate(10)).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+                            : '-'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>

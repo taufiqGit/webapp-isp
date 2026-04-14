@@ -3,6 +3,7 @@ import {
   boolean,
   date,
   index,
+  integer,
   numeric,
   pgEnum,
   pgTable,
@@ -43,6 +44,8 @@ export const customer = pgTable(
     birthDate: date("birth_date"),
     taxId: text("tax_id"),
     notes: text("notes"),
+    totalActiveSubscriptions: integer("total_active_subscriptions").default(0).notNull(),
+    nextPaymentDate: date("next_payment_date"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
