@@ -40,7 +40,7 @@ async function recomputeCustomerStatus(customerId: string) {
   }
 
   const subscriptions = await db
-    .select({ status: customerSubscription.status, endDate: customerSubscription.endDate })
+    .select({ status: customerSubscription.status, endDate: customerSubscription.endDate, priceMonthly: customerSubscription.priceMonthly })
     .from(customerSubscription)
     .where(eq(customerSubscription.customerId, customerId));
 
@@ -48,6 +48,9 @@ async function recomputeCustomerStatus(customerId: string) {
   const hasSuspended = subscriptions.some((sub) => sub.status === "suspended");
   const hasAny = subscriptions.length > 0;
   const activeCount = subscriptions.filter((sub) => sub.status === "active").length;
+  const totalSubscriptionCost = subscriptions
+    .filter((sub) => sub.status === "active")
+    .reduce((sum, sub) => sum + (sub.priceMonthly || 0), 0);
 
   // Calculate next payment date (earliest end date among active subscriptions)
   const activeEndDates = subscriptions
@@ -74,6 +77,7 @@ async function recomputeCustomerStatus(customerId: string) {
   const updates: any = {
     status: nextStatus,
     totalActiveSubscriptions: activeCount,
+    totalSubscriptionCost,
     updatedAt: new Date(),
   };
 
@@ -106,11 +110,12 @@ export const subscriptionRouter = router({
   create: protectedProcedure.input(createInputSchema).mutation(async ({ input }) => {
     const id = crypto.randomUUID();
     const startDate = input.startDate ? new Date(input.startDate) : new Date();
-    
-    // Set end date to 10th of next month from start date
+
+    // Set end date to 10th of next month from start date at 23:00
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + 1);
     endDate.setDate(10);
+    endDate.setHours(23, 0, 0, 0);
 
     const inserted = await db
       .insert(customerSubscription)

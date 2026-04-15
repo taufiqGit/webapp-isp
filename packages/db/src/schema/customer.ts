@@ -46,6 +46,7 @@ export const customer = pgTable(
     notes: text("notes"),
     totalActiveSubscriptions: integer("total_active_subscriptions").default(0).notNull(),
     nextPaymentDate: date("next_payment_date"),
+    totalSubscriptionCost: integer("total_subscription_cost").default(0).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()

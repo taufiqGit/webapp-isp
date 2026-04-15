@@ -103,8 +103,8 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
         : Promise.resolve(),
       selectedCustomerId
         ? queryClient.invalidateQueries({
-            queryKey: trpc.subscription.listByCustomer.queryKey({ customerId: selectedCustomerId }),
-          })
+          queryKey: trpc.subscription.listByCustomer.queryKey({ customerId: selectedCustomerId }),
+        })
         : Promise.resolve(),
     ]);
   };
@@ -169,64 +169,64 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
               <tbody>
                 {customersQuery.isLoading
                   ? new Array(8).fill(null).map((_, index) => (
-                      <tr key={`customer-skeleton-${index}`} className="border-b last:border-0">
-                        <td className="py-3">
-                          <Skeleton className="mb-1 h-3 w-44" />
-                          <Skeleton className="h-3 w-20" />
+                    <tr key={`customer-skeleton-${index}`} className="border-b last:border-0">
+                      <td className="py-3">
+                        <Skeleton className="mb-1 h-3 w-44" />
+                        <Skeleton className="h-3 w-20" />
+                      </td>
+                      <td className="py-3">
+                        <Skeleton className="h-3 w-20" />
+                      </td>
+                      <td className="py-3 text-right">
+                        <Skeleton className="ml-auto h-7 w-20" />
+                      </td>
+                    </tr>
+                  ))
+                  : customers.map((row) => {
+                    const isSelected = selectedCustomerId === row.id;
+                    const canTerminate = row.status === "suspended";
+                    return (
+                      <tr
+                        key={row.id}
+                        className={cn(
+                          "border-b last:border-0 hover:bg-muted/20",
+                          isSelected && "bg-muted/30",
+                        )}
+                      >
+                        <td
+                          className="cursor-pointer py-3 w-60"
+                          onClick={() => {
+                            setSelectedCustomerId(row.id);
+                          }}
+                        >
+                          <p className="font-medium">{row.name}</p>
+                          <p className="text-muted-foreground">{row.customerNumber}</p>
                         </td>
-                        <td className="py-3">
-                          <Skeleton className="h-3 w-20" />
+                        <td
+                          className="cursor-pointer py-3"
+                          onClick={() => {
+                            setSelectedCustomerId(row.id);
+                          }}
+                        >
+                          <span className={cn("font-medium", statusToneMap[row.status])}>{row.status}</span>
                         </td>
                         <td className="py-3 text-right">
-                          <Skeleton className="ml-auto h-7 w-20" />
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="rounded-lg"
+                            disabled={!canTerminate}
+                            onClick={() => {
+                              setTerminateCustomerTarget(row);
+                              setTerminateCustomerOpen(true);
+                            }}
+                          >
+                            Terminate
+                          </Button>
                         </td>
                       </tr>
-                    ))
-                  : customers.map((row) => {
-                      const isSelected = selectedCustomerId === row.id;
-                      const canTerminate = row.status === "suspended";
-                      return (
-                        <tr
-                          key={row.id}
-                          className={cn(
-                            "border-b last:border-0 hover:bg-muted/20",
-                            isSelected && "bg-muted/30",
-                          )}
-                        >
-                          <td
-                            className="cursor-pointer py-3 w-60"
-                            onClick={() => {
-                              setSelectedCustomerId(row.id);
-                            }}
-                          >
-                            <p className="font-medium">{row.name}</p>
-                            <p className="text-muted-foreground">{row.customerNumber}</p>
-                          </td>
-                          <td
-                            className="cursor-pointer py-3"
-                            onClick={() => {
-                              setSelectedCustomerId(row.id);
-                            }}
-                          >
-                            <span className={cn("font-medium", statusToneMap[row.status])}>{row.status}</span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              className="rounded-lg"
-                              disabled={!canTerminate}
-                              onClick={() => {
-                                setTerminateCustomerTarget(row);
-                                setTerminateCustomerOpen(true);
-                              }}
-                            >
-                              Terminate
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    );
+                  })}
                 {!customersQuery.isLoading && customers.length === 0 ? (
                   <tr>
                     <td colSpan={3} className="py-8 text-center text-sm text-muted-foreground">
@@ -358,120 +358,120 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
                       <tbody>
                         {subscriptionsQuery.isLoading
                           ? new Array(6).fill(null).map((_, index) => (
-                              <tr key={`sub-skeleton-${index}`} className="border-b last:border-0">
-                                <td className="py-3">
-                                  <Skeleton className="mb-1 h-3 w-48" />
-                                  <Skeleton className="h-3 w-20" />
-                                </td>
-                                <td className="py-3">
-                                  <Skeleton className="h-3 w-20" />
-                                </td>
-                                <td className="py-3">
-                                  <Skeleton className="h-3 w-20" />
-                                </td>
-                                <td className="py-3">
-                                  <Skeleton className="h-3 w-20" />
-                                </td>
-                                <td className="py-3 text-right">
-                                  <Skeleton className="ml-auto h-3 w-20" />
-                                </td>
-                                <td className="py-3 text-right">
-                                  <Skeleton className="ml-auto h-7 w-44" />
-                                </td>
-                              </tr>
-                            ))
+                            <tr key={`sub-skeleton-${index}`} className="border-b last:border-0">
+                              <td className="py-3">
+                                <Skeleton className="mb-1 h-3 w-48" />
+                                <Skeleton className="h-3 w-20" />
+                              </td>
+                              <td className="py-3">
+                                <Skeleton className="h-3 w-20" />
+                              </td>
+                              <td className="py-3">
+                                <Skeleton className="h-3 w-20" />
+                              </td>
+                              <td className="py-3">
+                                <Skeleton className="h-3 w-20" />
+                              </td>
+                              <td className="py-3 text-right">
+                                <Skeleton className="ml-auto h-3 w-20" />
+                              </td>
+                              <td className="py-3 text-right">
+                                <Skeleton className="ml-auto h-7 w-44" />
+                              </td>
+                            </tr>
+                          ))
                           : subscriptions.map((sub) => (
-                              <tr key={sub.id} className="border-b last:border-0">
-                                <td className="py-3">
-                                  <p className="font-medium">{sub.packageName}</p>
-                                  <p className="text-muted-foreground">{sub.packageId}</p>
-                                </td>
-                                <td className="py-3">
-                                  <span className={cn("font-medium", subscriptionToneMap[sub.status])}>
-                                    {sub.status}
-                                  </span>
-                                </td>
-                                <td className="py-3">{new Date(sub.startDate).toLocaleDateString()}</td>
-                                <td className="py-3">{sub.endDate ? new Date(sub.endDate).toLocaleDateString() : "-"}</td>
-                                <td className="py-3 text-right font-medium">
-                                  {sub.priceMonthly ? formatCurrency(sub.priceMonthly) : "-"}
-                                </td>
-                                <td className="py-3 text-right">
-                                  <div className="flex justify-end gap-2">
-                                    {sub.status === "active" ? (
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="rounded-lg border-border bg-background"
-                                        onClick={async () => {
-                                          try {
-                                            await setSubscriptionStatusMutation.mutateAsync({
-                                              id: sub.id,
-                                              status: "suspended",
-                                            });
-                                          } catch (error) {
-                                            toast.error(error instanceof Error ? error.message : "Gagal suspend");
-                                          }
-                                        }}
-                                      >
-                                        Suspend
-                                      </Button>
-                                    ) : sub.status === "suspended" ? (
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="rounded-lg border-border bg-background"
-                                        onClick={async () => {
-                                          try {
-                                            await setSubscriptionStatusMutation.mutateAsync({
-                                              id: sub.id,
-                                              status: "active",
-                                            });
-                                          } catch (error) {
-                                            toast.error(error instanceof Error ? error.message : "Gagal activate");
-                                          }
-                                        }}
-                                      >
-                                        Activate
-                                      </Button>
-                                    ) : null}
-                                    <Button
-                                      size="sm"
-                                      variant="destructive"
-                                      className="rounded-lg"
-                                      disabled={sub.status === "terminated"}
-                                      onClick={async () => {
-                                        try {
-                                          await setSubscriptionStatusMutation.mutateAsync({
-                                            id: sub.id,
-                                            status: "terminated",
-                                          });
-                                        } catch (error) {
-                                          toast.error(error instanceof Error ? error.message : "Gagal terminate");
-                                        }
-                                      }}
-                                    >
-                                      Terminate
-                                    </Button>
+                            <tr key={sub.id} className="border-b last:border-0">
+                              <td className="py-3">
+                                <p className="font-medium">{sub.packageName}</p>
+                                <p className="text-muted-foreground">{sub.packageId}</p>
+                              </td>
+                              <td className="py-3">
+                                <span className={cn("font-medium", subscriptionToneMap[sub.status])}>
+                                  {sub.status}
+                                </span>
+                              </td>
+                              <td className="py-3">{new Date(sub.startDate).toLocaleDateString()}</td>
+                              <td className="py-3">{sub.endDate ? new Date(sub.endDate).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '') : "-"}</td>
+                              <td className="py-3 text-right font-medium">
+                                {sub.priceMonthly ? formatCurrency(sub.priceMonthly) : "-"}
+                              </td>
+                              <td className="py-3 text-right">
+                                <div className="flex justify-end gap-2">
+                                  {sub.status === "active" ? (
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       className="rounded-lg border-border bg-background"
-                                      disabled={sub.status === "active"}
                                       onClick={async () => {
                                         try {
-                                          await deleteSubscriptionMutation.mutateAsync({ id: sub.id });
+                                          await setSubscriptionStatusMutation.mutateAsync({
+                                            id: sub.id,
+                                            status: "suspended",
+                                          });
                                         } catch (error) {
-                                          toast.error(error instanceof Error ? error.message : "Gagal delete");
+                                          toast.error(error instanceof Error ? error.message : "Gagal suspend");
                                         }
                                       }}
                                     >
-                                      Delete
+                                      Suspend
                                     </Button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
+                                  ) : sub.status === "suspended" ? (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="rounded-lg border-border bg-background"
+                                      onClick={async () => {
+                                        try {
+                                          await setSubscriptionStatusMutation.mutateAsync({
+                                            id: sub.id,
+                                            status: "active",
+                                          });
+                                        } catch (error) {
+                                          toast.error(error instanceof Error ? error.message : "Gagal activate");
+                                        }
+                                      }}
+                                    >
+                                      Activate
+                                    </Button>
+                                  ) : null}
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="rounded-lg"
+                                    disabled={sub.status === "terminated"}
+                                    onClick={async () => {
+                                      try {
+                                        await setSubscriptionStatusMutation.mutateAsync({
+                                          id: sub.id,
+                                          status: "terminated",
+                                        });
+                                      } catch (error) {
+                                        toast.error(error instanceof Error ? error.message : "Gagal terminate");
+                                      }
+                                    }}
+                                  >
+                                    Terminate
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="rounded-lg border-border bg-background"
+                                    disabled={sub.status === "active"}
+                                    onClick={async () => {
+                                      try {
+                                        await deleteSubscriptionMutation.mutateAsync({ id: sub.id });
+                                      } catch (error) {
+                                        toast.error(error instanceof Error ? error.message : "Gagal delete");
+                                      }
+                                    }}
+                                  >
+                                    Delete
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                         {!subscriptionsQuery.isLoading && subscriptions.length === 0 ? (
                           <tr>
                             <td colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
@@ -481,32 +481,43 @@ export default function CustomersSubscriptionPage({ preselectCustomerId }: { pre
                         ) : null}
                       </tbody>
                     </table>
+
+                    <div className="mt-4 mb-4 border-t pt-3">
+                      <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-2">
+                        <div></div>
+                        <div>
+                          <p className="text-xs font-medium text-muted-foreground">Next Payment</p>
+                          <p className="mt-1 text-sm font-medium">
+                            {activeSubscriptions.length > 0
+                              ? (() => {
+                                const now = new Date();
+                                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 10, 23, 0, 0);
+                                return nextMonth.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
+                              })()
+                              : '-'}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs font-medium text-muted-foreground">Total Biaya</p>
+                          <p className="mt-1 text-sm font-medium text-emerald-500">
+                            {selectedCustomerQuery.data?.totalSubscriptionCost
+                              ? formatCurrency(selectedCustomerQuery.data.totalSubscriptionCost)
+                              : '-'}
+                          </p>
+                        </div>
+                        <div></div>
+                      </div>
+                    </div>
                   </div>
                   {hasActiveSubscriptions ? (
                     <p className="mt-3 text-xs text-muted-foreground">
-                      Customer tidak bisa menjadi suspended/terminated jika masih ada subscription aktif.
+                      *Customer tidak bisa menjadi suspended/terminated jika masih ada subscription aktif.
                     </p>
                   ) : suspendedSubscriptions.length > 0 ? (
                     <p className="mt-3 text-xs text-muted-foreground">
                       Semua subscription non-aktif akan membuat customer menjadi suspended otomatis.
                     </p>
                   ) : null}
-                  <div className="mt-4 rounded-lg border border-border bg-muted/30 p-3">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Total Active Subscriptions</p>
-                        <p className="text-lg font-semibold text-emerald-500">{activeSubscriptions.length}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Next Payment Date</p>
-                        <p className="text-lg font-semibold">
-                          {activeSubscriptions.length > 0 
-                            ? new Date(new Date().setDate(10)).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-                            : '-'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>

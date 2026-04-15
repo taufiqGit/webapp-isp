@@ -14,6 +14,10 @@ import { queryClient, trpc } from "@/utils/trpc";
 
 type CustomerType = "individual" | "business";
 
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(value);
+}
+
 export default function CustomersCustomerPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
@@ -174,6 +178,7 @@ export default function CustomersCustomerPage() {
                   <th className="py-2 font-medium">Phone</th>
                   <th className="py-2 font-medium">Active Subs</th>
                   <th className="py-2 font-medium">Next Payment</th>
+                  <th className="py-2 font-medium text-right">Total Biaya</th>
                 </tr>
               </thead>
               <tbody>
@@ -226,12 +231,25 @@ export default function CustomersCustomerPage() {
                         <td className="py-3">{row.email ?? "-"}</td>
                         <td className="py-3">{row.phone ?? "-"}</td>
                         <td className="py-3">{row.totalActiveSubscriptions ?? 0}</td>
-                        <td className="py-3">{row.nextPaymentDate ? new Date(row.nextPaymentDate).toLocaleDateString('id-ID') : "-"}</td>
+                        <td className="py-3">
+                          {row.nextPaymentDate
+                            ? (() => {
+                                const date = new Date(row.nextPaymentDate);
+                                date.setHours(23, 0, 0, 0);
+                                return date.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
+                              })()
+                            : "-"}
+                        </td>
+                        <td className="py-3 text-right font-medium text-emerald-500">
+                          {row.totalSubscriptionCost
+                            ? formatCurrency(row.totalSubscriptionCost)
+                            : '-'}
+                        </td>
                       </tr>
                     ))}
                 {!listQuery.isLoading && rows.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
+                    <td colSpan={9} className="py-10 text-center text-sm text-muted-foreground">
                       Belum ada customer. Klik Add Customer untuk membuat customer pertama.
                     </td>
                   </tr>
@@ -422,9 +440,16 @@ export default function CustomersCustomerPage() {
               </div>
               <div className="space-y-1">
                 <Label>Next Payment Date</Label>
-                <Input 
-                  value={customerDetailQuery.data.nextPaymentDate ? new Date(customerDetailQuery.data.nextPaymentDate).toLocaleDateString('id-ID') : '-'} 
-                  readOnly 
+                <Input
+                  value={customerDetailQuery.data.nextPaymentDate ? new Date(customerDetailQuery.data.nextPaymentDate).toLocaleDateString('id-ID') : '-'}
+                  readOnly
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Total Subscription Cost</Label>
+                <Input
+                  value={customerDetailQuery.data.totalSubscriptionCost ? formatCurrency(customerDetailQuery.data.totalSubscriptionCost) : '-'}
+                  readOnly
                 />
               </div>
               <div className="space-y-1">
