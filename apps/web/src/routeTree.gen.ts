@@ -9,13 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MasterRouteImport } from './routes/master'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MasterTaxRouteImport } from './routes/master.tax'
+import { Route as MasterPlanRouteImport } from './routes/master.plan'
 import { Route as CustomersSubscriptionRouteImport } from './routes/customers.subscription'
 import { Route as CustomersCustomerRouteImport } from './routes/customers.customer'
 
+const MasterRoute = MasterRouteImport.update({
+  id: '/master',
+  path: '/master',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -36,6 +44,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterTaxRoute = MasterTaxRouteImport.update({
+  id: '/tax',
+  path: '/tax',
+  getParentRoute: () => MasterRoute,
+} as any)
+const MasterPlanRoute = MasterPlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => MasterRoute,
+} as any)
 const CustomersSubscriptionRoute = CustomersSubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
@@ -52,16 +70,22 @@ export interface FileRoutesByFullPath {
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/master': typeof MasterRouteWithChildren
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/plan': typeof MasterPlanRoute
+  '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/master': typeof MasterRouteWithChildren
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/plan': typeof MasterPlanRoute
+  '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +93,11 @@ export interface FileRoutesById {
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/master': typeof MasterRouteWithChildren
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/plan': typeof MasterPlanRoute
+  '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,24 +106,33 @@ export interface FileRouteTypes {
     | '/customers'
     | '/dashboard'
     | '/login'
+    | '/master'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/plan'
+    | '/master/tax'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/customers'
     | '/dashboard'
     | '/login'
+    | '/master'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/plan'
+    | '/master/tax'
   id:
     | '__root__'
     | '/'
     | '/customers'
     | '/dashboard'
     | '/login'
+    | '/master'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/plan'
+    | '/master/tax'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,10 +140,18 @@ export interface RootRouteChildren {
   CustomersRoute: typeof CustomersRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  MasterRoute: typeof MasterRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/master': {
+      id: '/master'
+      path: '/master'
+      fullPath: '/master'
+      preLoaderRoute: typeof MasterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -135,6 +179,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/master/tax': {
+      id: '/master/tax'
+      path: '/tax'
+      fullPath: '/master/tax'
+      preLoaderRoute: typeof MasterTaxRouteImport
+      parentRoute: typeof MasterRoute
+    }
+    '/master/plan': {
+      id: '/master/plan'
+      path: '/plan'
+      fullPath: '/master/plan'
+      preLoaderRoute: typeof MasterPlanRouteImport
+      parentRoute: typeof MasterRoute
     }
     '/customers/subscription': {
       id: '/customers/subscription'
@@ -167,11 +225,25 @@ const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
   CustomersRouteChildren,
 )
 
+interface MasterRouteChildren {
+  MasterPlanRoute: typeof MasterPlanRoute
+  MasterTaxRoute: typeof MasterTaxRoute
+}
+
+const MasterRouteChildren: MasterRouteChildren = {
+  MasterPlanRoute: MasterPlanRoute,
+  MasterTaxRoute: MasterTaxRoute,
+}
+
+const MasterRouteWithChildren =
+  MasterRoute._addFileChildren(MasterRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CustomersRoute: CustomersRouteWithChildren,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  MasterRoute: MasterRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

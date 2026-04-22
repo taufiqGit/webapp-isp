@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import {
   Activity,
   CircleDollarSign,
+  FolderTree,
   Moon,
   LogOut,
   LayoutDashboard,
@@ -25,6 +26,11 @@ interface NavItem {
   activeMatch?: "exact" | "prefix" | "none";
 }
 
+interface SubNavItem {
+  label: string;
+  to: "/master/tax" | "/master/plan";
+}
+
 const navItems: NavItem[] = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, activeMatch: "exact" },
   { label: "Customers", to: "/customers/customer", icon: Users, activeMatch: "prefix" },
@@ -32,6 +38,11 @@ const navItems: NavItem[] = [
   { label: "Billing & Invoices", to: "/", icon: CircleDollarSign, activeMatch: "none" },
   { label: "Support Tickets", to: "/", icon: Ticket, badge: "12", activeMatch: "none" },
   { label: "Service Packages", to: "/", icon: Package, activeMatch: "none" },
+];
+
+const masterSubItems: SubNavItem[] = [
+  { label: "Tax", to: "/master/tax" },
+  { label: "Plan", to: "/master/plan" },
 ];
 
 export default function DashboardSidebar() {
@@ -58,7 +69,7 @@ export default function DashboardSidebar() {
         </div>
 
         <nav className="space-y-1.5">
-          {navItems.map((item, index) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             const activeMatch = item.activeMatch ?? "none";
             const isActive =
@@ -90,6 +101,31 @@ export default function DashboardSidebar() {
               </Link>
             );
           })}
+
+          <div className="pt-1">
+            <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground">
+              <FolderTree className="size-4 shrink-0" />
+              <span className="text-base leading-none font-medium">Master</span>
+            </div>
+            <div className="space-y-1">
+              {masterSubItems.map((item) => {
+                const isSubActive = pathname === item.to;
+                return (
+                  <Link key={item.label} to={item.to} className="block">
+                    <div
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg py-2 pr-3 pl-8 text-sm text-muted-foreground transition-colors",
+                        isSubActive ? "bg-muted/60 text-foreground" : "hover:bg-muted/40 hover:text-foreground",
+                      )}
+                    >
+                      <span className="size-1.5 rounded-full bg-muted-foreground/60" />
+                      <span className="leading-none font-medium">{item.label}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </nav>
       </div>
 
