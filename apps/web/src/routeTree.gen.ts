@@ -9,16 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportTicketRouteImport } from './routes/support-ticket'
 import { Route as MasterRouteImport } from './routes/master'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as BillingInvoiceRouteImport } from './routes/billing-invoice'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MasterTaxRouteImport } from './routes/master.tax'
+import { Route as MasterSupportTicketCategoryRouteImport } from './routes/master.support-ticket-category'
 import { Route as MasterPlanRouteImport } from './routes/master.plan'
+import { Route as MasterPaymentMethodRouteImport } from './routes/master.payment-method'
+import { Route as MasterBillingCycleRouteImport } from './routes/master.billing-cycle'
 import { Route as CustomersSubscriptionRouteImport } from './routes/customers.subscription'
 import { Route as CustomersCustomerRouteImport } from './routes/customers.customer'
 
+const SupportTicketRoute = SupportTicketRouteImport.update({
+  id: '/support-ticket',
+  path: '/support-ticket',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasterRoute = MasterRouteImport.update({
   id: '/master',
   path: '/master',
@@ -39,6 +49,11 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillingInvoiceRoute = BillingInvoiceRouteImport.update({
+  id: '/billing-invoice',
+  path: '/billing-invoice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,9 +64,25 @@ const MasterTaxRoute = MasterTaxRouteImport.update({
   path: '/tax',
   getParentRoute: () => MasterRoute,
 } as any)
+const MasterSupportTicketCategoryRoute =
+  MasterSupportTicketCategoryRouteImport.update({
+    id: '/support-ticket-category',
+    path: '/support-ticket-category',
+    getParentRoute: () => MasterRoute,
+  } as any)
 const MasterPlanRoute = MasterPlanRouteImport.update({
   id: '/plan',
   path: '/plan',
+  getParentRoute: () => MasterRoute,
+} as any)
+const MasterPaymentMethodRoute = MasterPaymentMethodRouteImport.update({
+  id: '/payment-method',
+  path: '/payment-method',
+  getParentRoute: () => MasterRoute,
+} as any)
+const MasterBillingCycleRoute = MasterBillingCycleRouteImport.update({
+  id: '/billing-cycle',
+  path: '/billing-cycle',
   getParentRoute: () => MasterRoute,
 } as any)
 const CustomersSubscriptionRoute = CustomersSubscriptionRouteImport.update({
@@ -67,84 +98,123 @@ const CustomersCustomerRoute = CustomersCustomerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/billing-invoice': typeof BillingInvoiceRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/master': typeof MasterRouteWithChildren
+  '/support-ticket': typeof SupportTicketRoute
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/billing-cycle': typeof MasterBillingCycleRoute
+  '/master/payment-method': typeof MasterPaymentMethodRoute
   '/master/plan': typeof MasterPlanRoute
+  '/master/support-ticket-category': typeof MasterSupportTicketCategoryRoute
   '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/billing-invoice': typeof BillingInvoiceRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/master': typeof MasterRouteWithChildren
+  '/support-ticket': typeof SupportTicketRoute
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/billing-cycle': typeof MasterBillingCycleRoute
+  '/master/payment-method': typeof MasterPaymentMethodRoute
   '/master/plan': typeof MasterPlanRoute
+  '/master/support-ticket-category': typeof MasterSupportTicketCategoryRoute
   '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/billing-invoice': typeof BillingInvoiceRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/master': typeof MasterRouteWithChildren
+  '/support-ticket': typeof SupportTicketRoute
   '/customers/customer': typeof CustomersCustomerRoute
   '/customers/subscription': typeof CustomersSubscriptionRoute
+  '/master/billing-cycle': typeof MasterBillingCycleRoute
+  '/master/payment-method': typeof MasterPaymentMethodRoute
   '/master/plan': typeof MasterPlanRoute
+  '/master/support-ticket-category': typeof MasterSupportTicketCategoryRoute
   '/master/tax': typeof MasterTaxRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/billing-invoice'
     | '/customers'
     | '/dashboard'
     | '/login'
     | '/master'
+    | '/support-ticket'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/billing-cycle'
+    | '/master/payment-method'
     | '/master/plan'
+    | '/master/support-ticket-category'
     | '/master/tax'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/billing-invoice'
     | '/customers'
     | '/dashboard'
     | '/login'
     | '/master'
+    | '/support-ticket'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/billing-cycle'
+    | '/master/payment-method'
     | '/master/plan'
+    | '/master/support-ticket-category'
     | '/master/tax'
   id:
     | '__root__'
     | '/'
+    | '/billing-invoice'
     | '/customers'
     | '/dashboard'
     | '/login'
     | '/master'
+    | '/support-ticket'
     | '/customers/customer'
     | '/customers/subscription'
+    | '/master/billing-cycle'
+    | '/master/payment-method'
     | '/master/plan'
+    | '/master/support-ticket-category'
     | '/master/tax'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BillingInvoiceRoute: typeof BillingInvoiceRoute
   CustomersRoute: typeof CustomersRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   MasterRoute: typeof MasterRouteWithChildren
+  SupportTicketRoute: typeof SupportTicketRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support-ticket': {
+      id: '/support-ticket'
+      path: '/support-ticket'
+      fullPath: '/support-ticket'
+      preLoaderRoute: typeof SupportTicketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/master': {
       id: '/master'
       path: '/master'
@@ -173,6 +243,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/billing-invoice': {
+      id: '/billing-invoice'
+      path: '/billing-invoice'
+      fullPath: '/billing-invoice'
+      preLoaderRoute: typeof BillingInvoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -187,11 +264,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterTaxRouteImport
       parentRoute: typeof MasterRoute
     }
+    '/master/support-ticket-category': {
+      id: '/master/support-ticket-category'
+      path: '/support-ticket-category'
+      fullPath: '/master/support-ticket-category'
+      preLoaderRoute: typeof MasterSupportTicketCategoryRouteImport
+      parentRoute: typeof MasterRoute
+    }
     '/master/plan': {
       id: '/master/plan'
       path: '/plan'
       fullPath: '/master/plan'
       preLoaderRoute: typeof MasterPlanRouteImport
+      parentRoute: typeof MasterRoute
+    }
+    '/master/payment-method': {
+      id: '/master/payment-method'
+      path: '/payment-method'
+      fullPath: '/master/payment-method'
+      preLoaderRoute: typeof MasterPaymentMethodRouteImport
+      parentRoute: typeof MasterRoute
+    }
+    '/master/billing-cycle': {
+      id: '/master/billing-cycle'
+      path: '/billing-cycle'
+      fullPath: '/master/billing-cycle'
+      preLoaderRoute: typeof MasterBillingCycleRouteImport
       parentRoute: typeof MasterRoute
     }
     '/customers/subscription': {
@@ -226,12 +324,18 @@ const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
 )
 
 interface MasterRouteChildren {
+  MasterBillingCycleRoute: typeof MasterBillingCycleRoute
+  MasterPaymentMethodRoute: typeof MasterPaymentMethodRoute
   MasterPlanRoute: typeof MasterPlanRoute
+  MasterSupportTicketCategoryRoute: typeof MasterSupportTicketCategoryRoute
   MasterTaxRoute: typeof MasterTaxRoute
 }
 
 const MasterRouteChildren: MasterRouteChildren = {
+  MasterBillingCycleRoute: MasterBillingCycleRoute,
+  MasterPaymentMethodRoute: MasterPaymentMethodRoute,
   MasterPlanRoute: MasterPlanRoute,
+  MasterSupportTicketCategoryRoute: MasterSupportTicketCategoryRoute,
   MasterTaxRoute: MasterTaxRoute,
 }
 
@@ -240,10 +344,12 @@ const MasterRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BillingInvoiceRoute: BillingInvoiceRoute,
   CustomersRoute: CustomersRouteWithChildren,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   MasterRoute: MasterRouteWithChildren,
+  SupportTicketRoute: SupportTicketRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

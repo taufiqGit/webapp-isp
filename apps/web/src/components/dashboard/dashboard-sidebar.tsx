@@ -20,7 +20,7 @@ import { authClient } from "@/lib/auth-client";
 
 interface NavItem {
   label: string;
-  to: "/" | "/customers/customer";
+  to: "/" | "/customers/customer" | "/support-ticket" | "/billing-invoice";
   icon: typeof LayoutDashboard;
   badge?: string;
   activeMatch?: "exact" | "prefix" | "none";
@@ -28,21 +28,29 @@ interface NavItem {
 
 interface SubNavItem {
   label: string;
-  to: "/master/tax" | "/master/plan";
+  to:
+    | "/master/tax"
+    | "/master/plan"
+    | "/master/billing-cycle"
+    | "/master/payment-method"
+    | "/master/support-ticket-category";
 }
 
 const navItems: NavItem[] = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, activeMatch: "exact" },
   { label: "Customers", to: "/customers/customer", icon: Users, activeMatch: "prefix" },
   { label: "Network Status", to: "/", icon: Network, activeMatch: "none" },
-  { label: "Billing & Invoices", to: "/", icon: CircleDollarSign, activeMatch: "none" },
-  { label: "Support Tickets", to: "/", icon: Ticket, badge: "12", activeMatch: "none" },
+  { label: "Billing & Invoices", to: "/billing-invoice", icon: CircleDollarSign, activeMatch: "exact" },
+  { label: "Support Tickets", to: "/support-ticket", icon: Ticket, badge: "12", activeMatch: "exact" },
   { label: "Service Packages", to: "/", icon: Package, activeMatch: "none" },
 ];
 
 const masterSubItems: SubNavItem[] = [
   { label: "Tax", to: "/master/tax" },
   { label: "Plan", to: "/master/plan" },
+  { label: "Billing Cycle", to: "/master/billing-cycle" },
+  { label: "Payment Method", to: "/master/payment-method" },
+  { label: "Ticket Category", to: "/master/support-ticket-category" },
 ];
 
 export default function DashboardSidebar() {

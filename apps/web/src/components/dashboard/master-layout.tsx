@@ -8,7 +8,15 @@ import DashboardTopbar from "./dashboard-topbar";
 
 export default function MasterLayout({ userName }: { userName?: string }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const activeTab = pathname.startsWith("/master/plan") ? "plan" : "tax";
+  const activeTab = pathname.startsWith("/master/plan")
+    ? "plan"
+    : pathname.startsWith("/master/billing-cycle")
+      ? "billing-cycle"
+      : pathname.startsWith("/master/payment-method")
+        ? "payment-method"
+    : pathname.startsWith("/master/support-ticket-category")
+      ? "support-ticket-category"
+      : "tax";
 
   return (
     <DashboardShell
@@ -33,6 +41,33 @@ export default function MasterLayout({ userName }: { userName?: string }) {
               className={cn("rounded-lg", activeTab !== "plan" && "border-border bg-background")}
             >
               Plan
+            </Button>
+          </Link>
+          <Link to="/master/billing-cycle">
+            <Button
+              variant={activeTab === "billing-cycle" ? "secondary" : "outline"}
+              size="sm"
+              className={cn("rounded-lg", activeTab !== "billing-cycle" && "border-border bg-background")}
+            >
+              Billing Cycle
+            </Button>
+          </Link>
+          <Link to="/master/payment-method">
+            <Button
+              variant={activeTab === "payment-method" ? "secondary" : "outline"}
+              size="sm"
+              className={cn("rounded-lg", activeTab !== "payment-method" && "border-border bg-background")}
+            >
+              Payment Method
+            </Button>
+          </Link>
+          <Link to="/master/support-ticket-category">
+            <Button
+              variant={activeTab === "support-ticket-category" ? "secondary" : "outline"}
+              size="sm"
+              className={cn("rounded-lg", activeTab !== "support-ticket-category" && "border-border bg-background")}
+            >
+              Ticket Category
             </Button>
           </Link>
         </div>
