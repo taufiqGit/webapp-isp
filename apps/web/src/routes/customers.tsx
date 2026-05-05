@@ -1,21 +1,21 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { z } from "zod";
 
 import CustomersLayout from "@/components/dashboard/customers-layout";
 import { authClient } from "@/lib/auth-client";
 
+const searchSchema = z.object({
+  customerId: z.string().optional(),
+});
+
 export const Route = createFileRoute("/customers")({
   component: RouteComponent,
-  beforeLoad: async ({ location }) => {
+  validateSearch: (search) => searchSchema.parse(search),
+  beforeLoad: async () => {
     const session = await authClient.getSession();
     if (!session.data) {
       redirect({
         to: "/login",
-        throw: true,
-      });
-    }
-    if (location.pathname === "/customers") {
-      redirect({
-        to: "/customers/customer",
         throw: true,
       });
     }
@@ -25,5 +25,6 @@ export const Route = createFileRoute("/customers")({
 
 function RouteComponent() {
   const { session } = Route.useRouteContext();
-  return <CustomersLayout userName={session.data?.user.name} />;
+  const search = Route.useSearch();
+  return <CustomersLayout userName={session.data?.user.name} preselectCustomerId={search.customerId} />;
 }

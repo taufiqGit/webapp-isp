@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";
-
-import CustomersSubscriptionPage from "@/components/dashboard/customers-subscription-page";
 
 const searchSchema = z.object({
   customerId: z.string().optional(),
@@ -10,9 +8,15 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/customers/subscription")({
   component: RouteComponent,
   validateSearch: (search) => searchSchema.parse(search),
+  beforeLoad: ({ search }) => {
+    redirect({
+      to: "/customers",
+      search: search.customerId ? { customerId: search.customerId } : {},
+      throw: true,
+    });
+  },
 });
 
 function RouteComponent() {
-  const search = Route.useSearch();
-  return <CustomersSubscriptionPage preselectCustomerId={search.customerId} />;
+  return null;
 }

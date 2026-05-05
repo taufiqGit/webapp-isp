@@ -184,7 +184,7 @@ export default function MasterPlanPage() {
                       <td className="py-3 font-medium">{row.code}</td>
                       <td className="py-3">{row.name}</td>
                       <td className="py-3 text-right">{row.speedMbps} Mbps</td>
-                      <td className="py-3 text-right font-medium">{formatCurrency(row.priceMonthly)}</td>
+                      <td className="py-3 text-right font-medium">{formatCurrency(row.priceMonthly)} </td>
                       <td className="py-3">{row.taxName ?? "-"}</td>
                       <td className="py-3">{row.isActive ? "Active" : "Inactive"}</td>
                       <td className="py-3 text-muted-foreground">{row.description ?? "-"}</td>

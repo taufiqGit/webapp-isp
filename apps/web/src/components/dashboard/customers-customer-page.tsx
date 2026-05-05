@@ -108,7 +108,7 @@ export default function CustomersCustomerPage() {
                 className="rounded-lg"
                 onClick={() => {
                   navigate({
-                    to: "/customers/subscription",
+                    to: "/customers",
                     search: { customerId: lastCustomer.id },
                   });
                 }}
@@ -300,7 +300,7 @@ export default function CustomersCustomerPage() {
                   label: "Buat subscription",
                   onClick: () => {
                     navigate({
-                      to: "/customers/subscription",
+                      to: "/customers",
                       search: { customerId: created.id },
                     });
                   },

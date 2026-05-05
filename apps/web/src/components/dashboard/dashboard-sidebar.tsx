@@ -20,7 +20,7 @@ import { authClient } from "@/lib/auth-client";
 
 interface NavItem {
   label: string;
-  to: "/" | "/customers/customer" | "/support-ticket" | "/billing-invoice";
+  to: "/" | "/customers" | "/support-ticket" | "/billing-invoice";
   icon: typeof LayoutDashboard;
   badge?: string;
   activeMatch?: "exact" | "prefix" | "none";
@@ -38,7 +38,7 @@ interface SubNavItem {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, activeMatch: "exact" },
-  { label: "Customers", to: "/customers/customer", icon: Users, activeMatch: "prefix" },
+  { label: "Customers", to: "/customers", icon: Users, activeMatch: "prefix" },
   { label: "Network Status", to: "/", icon: Network, activeMatch: "none" },
   { label: "Billing & Invoices", to: "/billing-invoice", icon: CircleDollarSign, activeMatch: "exact" },
   { label: "Support Tickets", to: "/support-ticket", icon: Ticket, badge: "12", activeMatch: "exact" },
