@@ -1,7 +1,7 @@
 import { db } from "@isp-app/db";
 import { plan } from "@isp-app/db/schema/plan";
 import { tax } from "@isp-app/db/schema/tax";
-import { and, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -45,6 +45,25 @@ const deleteInputSchema = z.object({
 });
 
 export const planRouter = router({
+  listActive: protectedProcedure.query(async () => {
+    const items = await db
+      .select({
+        id: plan.id,
+        code: plan.code,
+        name: plan.name,
+        speedMbps: plan.speedMbps,
+        priceMonthly: plan.priceMonthly,
+      })
+      .from(plan)
+      .where(eq(plan.isActive, true))
+      .orderBy(asc(plan.name));
+
+    return {
+      items,
+      total: items.length,
+    };
+  }),
+
   list: protectedProcedure.input(listInputSchema).query(async ({ input }) => {
     const filters: SQL[] = [];
 
